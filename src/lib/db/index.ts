@@ -2,16 +2,11 @@ import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema/ideas';
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
-// Создаем функцию для получения инстанса БД, чтобы не инициализировать его сразу при билде
-const createDb = () => {
-  if (!connectionString) {
-    // Возвращаем прокси или заглушку, которая упадет только при реальном вызове
-    return {} as any;
-  }
-  const sql = neon(connectionString);
-  return drizzle(sql, { schema });
-};
+if (!connectionString && process.env.NODE_ENV === 'production') {
+  console.warn("⚠️ DATABASE_URL is missing. Database will not work.");
+}
 
-export const db = createDb();
+const sql = neon(connectionString || "");
+export const db = drizzle(sql, { schema });
