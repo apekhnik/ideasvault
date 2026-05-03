@@ -6,6 +6,8 @@ import { ideas } from "@/lib/db/schema/ideas";
 import { auth } from "@clerk/nextjs/server";
 import { desc, eq } from "drizzle-orm";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const { userId } = await auth();
   
