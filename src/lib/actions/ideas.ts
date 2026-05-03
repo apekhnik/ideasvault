@@ -1,8 +1,9 @@
 "use server";
 import { db } from "@/lib/db";
+import { ideas } from "@/lib/db/schema/ideas";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { sql } from "drizzle-orm";
+import { sql, eq, and } from "drizzle-orm";
 
 export async function createIdea(formData: FormData) {
   try {
@@ -36,5 +37,25 @@ export async function createIdea(formData: FormData) {
     const message = error instanceof Error ? error.message : "Database error";
     console.error("🔥 Raw SQL Error:", message);
     return { success: false, error: message };
+  }
+}
+
+export async function deleteIdea(id: number) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    await db.delete(ideas).where(
+      and(
+        eq(ideas.id, id),
+        eq(ideas.userId, userId)
+      )
+    );
+
+    revalidatePath("/");
+    return { success: true };
+  } catch (error) {
+    console.error("🔥 Delete Error:", error);
+    return { success: false };
   }
 }

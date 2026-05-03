@@ -47,6 +47,7 @@ export default async function Home() {
             {userIdeas.map((idea) => (
               <IdeaCard 
                 key={idea.id} 
+                id={idea.id}
                 title={idea.title}
                 category={idea.category}
                 priority={idea.priority as 'low' | 'medium' | 'high'}

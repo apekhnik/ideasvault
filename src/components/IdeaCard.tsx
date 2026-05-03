@@ -1,12 +1,14 @@
-import { Star, Edit, Trash2, ChevronsUp, ChevronsDown, Minus } from "lucide-react";
+import { Star, Edit, ChevronsUp, ChevronsDown, Minus } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import DeleteIdeaButton from "./DeleteIdeaButton";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 interface IdeaCardProps {
+  id: number;
   title: string;
   category: string;
   priority: 'low' | 'medium' | 'high';
@@ -15,7 +17,7 @@ interface IdeaCardProps {
   date: string;
 }
 
-export default function IdeaCard({ title, category, priority, rating, notes, date }: IdeaCardProps) {
+export default function IdeaCard({ id, title, category, priority, rating, notes, date }: IdeaCardProps) {
   const PriorityIcon = priority === 'high' ? ChevronsUp : priority === 'low' ? ChevronsDown : Minus;
   const priorityColor = priority === 'high' ? "text-error border-error/30" : priority === 'medium' ? "text-primary border-primary/30" : "text-on-surface-variant border-outline/30";
 
@@ -38,9 +40,7 @@ export default function IdeaCard({ title, category, priority, rating, notes, dat
           <button className="text-outline hover:text-primary transition-colors">
             <Edit className="w-4 h-4" />
           </button>
-          <button className="text-outline hover:text-error transition-colors">
-            <Trash2 className="w-4 h-4" />
-          </button>
+          <DeleteIdeaButton id={id} />
         </div>
       </div>
 
