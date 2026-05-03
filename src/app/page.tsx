@@ -13,8 +13,12 @@ export default async function Home() {
   
   type Idea = typeof ideas.$inferSelect;
   let userIdeas: Idea[] = [];
-  if (userId) {
-    userIdeas = await db.select().from(ideas).where(eq(ideas.userId, userId)).orderBy(desc(ideas.createdAt));
+  try {
+    if (userId) {
+      userIdeas = await db.select().from(ideas).where(eq(ideas.userId, userId)).orderBy(desc(ideas.createdAt));
+    }
+  } catch (dbError) {
+    console.error("❌ Database query failed:", dbError);
   }
 
   return (

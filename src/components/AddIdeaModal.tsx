@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { X, Star, Lock, Plus } from "lucide-react";
+import { X, Star, Lock } from "lucide-react";
 import { createIdea } from "@/lib/actions/ideas";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
