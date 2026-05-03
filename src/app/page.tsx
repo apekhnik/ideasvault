@@ -52,7 +52,7 @@ export default async function Home() {
                 priority={idea.priority as 'low' | 'medium' | 'high'}
                 rating={idea.rating || 0}
                 notes={idea.notes || ""}
-                date={new Date(idea.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                date={new Date(idea.createdAt ?? new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
               />
             ))}
           </div>
