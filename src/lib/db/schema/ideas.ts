@@ -2,13 +2,13 @@ import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
 
 export const ideas = pgTable("ideas", {
   id: serial("id").primaryKey(),
-  userId: text("user_id").notNull(), // Используем простой text вместо varchar
+  userId: text("user_id").notNull(),
   title: text("title").notNull(),
   category: text("category").notNull(),
   priority: text("priority").notNull(),
-  rating: integer("rating").default(0),
+  rating: integer("rating"),
   notes: text("notes"),
   tags: text("tags"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at"),
+  updatedAt: timestamp("updated_at"),
 });

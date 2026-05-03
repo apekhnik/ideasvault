@@ -12,8 +12,28 @@ function cn(...inputs: ClassValue[]) {
 export default function AddIdeaModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const [rating, setRating] = useState(3);
   const [priority, setPriority] = useState("medium");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
+
+  async function handleSubmit(formData: FormData) {
+    setIsLoading(true);
+    setError(null);
+    
+    // Добавляем значения из стейта в formData вручную для надежности
+    formData.set("rating", rating.toString());
+    formData.set("priority", priority);
+
+    const result = await createIdea(formData);
+    
+    if (result?.success) {
+      onClose();
+    } else {
+      setError(result?.error || "Произошла ошибка при сохранении");
+    }
+    setIsLoading(false);
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-[6px] flex items-center justify-center p-4">
@@ -27,12 +47,12 @@ export default function AddIdeaModal({ isOpen, onClose }: { isOpen: boolean, onC
         </div>
 
         {/* Form Body */}
-        <form action={async (formData) => {
-          await createIdea(formData);
-          onClose();
-        }} className="p-6 overflow-y-auto flex flex-col gap-6">
-          <input type="hidden" name="rating" value={rating} />
-          <input type="hidden" name="priority" value={priority} />
+        <form action={handleSubmit} className="p-6 overflow-y-auto flex flex-col gap-6">
+          {error && (
+            <div className="p-3 bg-error/10 border border-error/20 text-error rounded-lg text-sm">
+              {error}
+            </div>
+          )}
 
           {/* Title Field */}
           <div className="flex flex-col gap-1">
@@ -114,10 +134,11 @@ export default function AddIdeaModal({ isOpen, onClose }: { isOpen: boolean, onC
           <div className="mt-4 flex flex-col gap-3">
             <button 
               type="submit"
-              className="w-full py-4 rounded-lg gold-gradient text-surface font-semibold tracking-wide hover:brightness-110 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+              disabled={isLoading}
+              className="w-full py-4 rounded-lg gold-gradient text-surface font-semibold tracking-wide hover:brightness-110 transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <Lock className="w-4 h-4" />
-              Store in Vault
+              {isLoading ? "Storing..." : "Store in Vault"}
             </button>
             <button 
               type="button"
