@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import IdeaCard from "@/components/IdeaCard";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import { auth } from "@clerk/nextjs/server";
 import { toIdeaCardProps } from "@/lib/presenters/ideas";
 import { getUserArchivedIdeas } from "@/lib/queries/ideas";
@@ -14,7 +15,7 @@ export default async function ArchivesPage() {
     <div className="flex flex-col min-h-screen">
       <Header />
 
-      <main className="flex-1 max-w-[1200px] w-full mx-auto px-6 md:px-16 py-12 md:py-16">
+      <main className="flex-1 max-w-[1200px] w-full mx-auto px-6 md:px-16 py-12 md:py-16 pb-24 md:pb-16">
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-light tracking-tight text-on-surface">
             Archives
@@ -45,6 +46,7 @@ export default async function ArchivesPage() {
           </section>
         )}
       </main>
+      <MobileBottomNav active="archives" />
     </div>
   );
 }

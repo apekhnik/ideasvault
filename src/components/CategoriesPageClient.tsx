@@ -2,6 +2,7 @@
 
 import Header from "@/components/Header";
 import { createCategory } from "@/lib/actions/ideas";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Link from "next/link";
 import { type FormEvent, useMemo, useState } from "react";
 import {
@@ -15,7 +16,6 @@ import {
   List,
   Plus,
   Search,
-  Settings,
   UserRound,
   X,
   type LucideIcon,
@@ -294,7 +294,7 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
       </main>
 
       <MobileCategoriesFab onCreate={() => setIsCreateOpen(true)} />
-      <MobileCategoriesBottomNav />
+      <MobileBottomNav active="categories" />
 
       <CreateCategoryModal
         isOpen={isCreateOpen}
@@ -336,29 +336,6 @@ function MobileCategoriesFab({ onCreate }: { onCreate: () => void }) {
     >
       <Plus className="w-7 h-7 text-zinc-950" />
     </button>
-  );
-}
-
-function MobileCategoriesBottomNav() {
-  return (
-    <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-zinc-950 border-t border-amber-500/20 shadow-[0_-4px_20px_rgba(201,168,76,0.1)]">
-      <Link href="/" className="flex flex-col items-center justify-center text-zinc-600 hover:text-amber-400 transition-all active:scale-90">
-        <Archive className="w-4 h-4 mb-1" />
-        <span className="text-[10px] font-medium tracking-widest uppercase">Vault</span>
-      </Link>
-      <Link href="/categories" className="flex flex-col items-center justify-center text-amber-500 bg-zinc-900/50 rounded-xl px-4 py-1 transition-all active:scale-90">
-        <Grid2x2 className="w-4 h-4 mb-1" />
-        <span className="text-[10px] font-medium tracking-widest uppercase">Categories</span>
-      </Link>
-      <button className="flex flex-col items-center justify-center text-zinc-600 hover:text-amber-400 transition-all active:scale-90">
-        <Search className="w-4 h-4 mb-1" />
-        <span className="text-[10px] font-medium tracking-widest uppercase">Search</span>
-      </button>
-      <button className="flex flex-col items-center justify-center text-zinc-600 hover:text-amber-400 transition-all active:scale-90">
-        <Settings className="w-4 h-4 mb-1" />
-        <span className="text-[10px] font-medium tracking-widest uppercase">Settings</span>
-      </button>
-    </nav>
   );
 }
 
@@ -420,7 +397,7 @@ function CreateCategoryModal({
       <div className="md:hidden w-full max-w-[500px] bg-[#161616] border border-primary/20 rounded-t-4xl shadow-[0_-8px_40px_rgba(0,0,0,0.5)] flex flex-col max-h-[88vh] overflow-hidden">
         <div className="w-12 h-1 bg-primary/20 rounded-full mx-auto mt-4 mb-2" />
         <div className="px-8 pt-6 pb-4 flex justify-between items-center">
-          <h2 className="text-3xl font-light text-on-surface">New Repository</h2>
+          <h2 className="text-3xl font-light text-on-surface">Create New Category</h2>
           <button onClick={onClose} className="text-on-surface-variant hover:text-primary transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -436,7 +413,7 @@ function CreateCategoryModal({
             setIconKey={setIconKey}
             onClose={onClose}
             onSubmit={handleSubmit}
-            submitLabel="Create Vault"
+            submitLabel="Create Category"
             cancelLabel="Close"
           />
         </div>

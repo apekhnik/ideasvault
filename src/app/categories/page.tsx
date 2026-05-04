@@ -54,7 +54,10 @@ function buildCategoryCards(
   }
 
   const userCategoryMap = new Map(
-    userCategories.map((category) => [normalizeCategory(category.title), category])
+    userCategories.map((category) => [
+      normalizeCategory(category.title).toLowerCase(),
+      category,
+    ])
   );
 
   return [...grouped.entries()]
@@ -66,7 +69,7 @@ function buildCategoryCards(
       return leftSafeOrder - rightSafeOrder;
     })
     .map(([title, categoryIdeas]) => {
-      const persistedCategory = userCategoryMap.get(title);
+      const persistedCategory = userCategoryMap.get(title.toLowerCase());
       const newestDate = categoryIdeas[0]?.createdAt ?? null;
       return {
         title,
@@ -77,7 +80,7 @@ function buildCategoryCards(
           categoryIdeas[0]?.title ||
           persistedCategory?.description ||
           "No recent notes yet.",
-        iconKey: persistedCategory?.iconKey || CATEGORY_ICON_KEY_MAP[title] || "Other",
+        iconKey: resolveCategoryIconKey(title, persistedCategory?.iconKey),
       };
     });
 }
@@ -87,6 +90,17 @@ function normalizeCategory(rawCategory: string | null): string {
   const value = rawCategory.trim();
   if (!value) return "Other";
   return value;
+}
+
+function resolveCategoryIconKey(
+  title: string,
+  persistedIconKey: string | null | undefined
+): string {
+  if (persistedIconKey && persistedIconKey.trim()) {
+    return persistedIconKey.trim();
+  }
+
+  return CATEGORY_ICON_KEY_MAP[title] || "Other";
 }
 
 function formatRelativeTime(date: Date | null): string {
