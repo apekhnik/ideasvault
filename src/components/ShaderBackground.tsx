@@ -66,51 +66,53 @@ export default function ShaderBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext("webgl", {
+    const canvasEl: HTMLCanvasElement = canvas;
+    const gl = canvasEl.getContext("webgl", {
       alpha: false,
       antialias: false,
       depth: false,
       stencil: false,
     });
     if (!gl) return;
+    const glCtx: WebGLRenderingContext = gl;
 
     function createShader(type: number, source: string) {
-      const shader = gl.createShader(type);
+      const shader = glCtx.createShader(type);
       if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        gl.deleteShader(shader);
+      glCtx.shaderSource(shader, source);
+      glCtx.compileShader(shader);
+      if (!glCtx.getShaderParameter(shader, glCtx.COMPILE_STATUS)) {
+        glCtx.deleteShader(shader);
         return null;
       }
       return shader;
     }
 
-    const vs = createShader(gl.VERTEX_SHADER, vertexShaderSource);
-    const fs = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+    const vs = createShader(glCtx.VERTEX_SHADER, vertexShaderSource);
+    const fs = createShader(glCtx.FRAGMENT_SHADER, fragmentShaderSource);
     if (!vs || !fs) return;
 
-    const program = gl.createProgram();
+    const program = glCtx.createProgram();
     if (!program) return;
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      gl.deleteProgram(program);
+    glCtx.attachShader(program, vs);
+    glCtx.attachShader(program, fs);
+    glCtx.linkProgram(program);
+    if (!glCtx.getProgramParameter(program, glCtx.LINK_STATUS)) {
+      glCtx.deleteProgram(program);
       return;
     }
-    gl.useProgram(program);
+    glCtx.useProgram(program);
 
     const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+    const buffer = glCtx.createBuffer();
+    glCtx.bindBuffer(glCtx.ARRAY_BUFFER, buffer);
+    glCtx.bufferData(glCtx.ARRAY_BUFFER, vertices, glCtx.STATIC_DRAW);
 
-    const positionLocation = gl.getAttribLocation(program, "position");
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+    const positionLocation = glCtx.getAttribLocation(program, "position");
+    glCtx.enableVertexAttribArray(positionLocation);
+    glCtx.vertexAttribPointer(positionLocation, 2, glCtx.FLOAT, false, 0, 0);
 
-    const timeLocation = gl.getUniformLocation(program, "uTime");
+    const timeLocation = glCtx.getUniformLocation(program, "uTime");
 
     let rafId = 0;
 
@@ -118,9 +120,9 @@ export default function ShaderBackground() {
       const w = window.innerWidth;
       const h = window.innerHeight;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      canvasEl.width = Math.floor(w * dpr);
+      canvasEl.height = Math.floor(h * dpr);
+      glCtx.viewport(0, 0, canvasEl.width, canvasEl.height);
     }
 
     resizeCanvas();
@@ -131,8 +133,8 @@ export default function ShaderBackground() {
     window.addEventListener("resize", onResize);
 
     function render(time: number) {
-      gl.uniform1f(timeLocation, time * 0.001);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      glCtx.uniform1f(timeLocation, time * 0.001);
+      glCtx.drawArrays(glCtx.TRIANGLE_STRIP, 0, 4);
       rafId = requestAnimationFrame(render);
     }
 
@@ -141,10 +143,10 @@ export default function ShaderBackground() {
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", onResize);
-      gl.deleteProgram(program);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
-      gl.deleteBuffer(buffer);
+      glCtx.deleteProgram(program);
+      glCtx.deleteShader(vs);
+      glCtx.deleteShader(fs);
+      glCtx.deleteBuffer(buffer);
     };
   }, []);
 
