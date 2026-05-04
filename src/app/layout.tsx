@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import ShaderBackground from "@/components/ShaderBackground";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,8 +22,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${inter.variable} h-full antialiased dark`}>
-        <body className="min-h-full flex flex-col bg-background text-on-background font-body">
-          {children}
+        <body className="relative min-h-full flex flex-col bg-transparent text-on-background font-body">
+          <ShaderBackground />
+          <div className="relative z-10 flex min-h-full flex-1 flex-col">
+            {children}
+          </div>
         </body>
       </html>
     </ClerkProvider>
