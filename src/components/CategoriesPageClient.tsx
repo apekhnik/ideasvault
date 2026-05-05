@@ -3,6 +3,7 @@
 import Header from "@/components/Header";
 import { createCategory } from "@/lib/actions/ideas";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import CategoryListRow from "@/components/CategoryListRow";
 import Link from "next/link";
 import { type FormEvent, useMemo, useState } from "react";
 import {
@@ -34,6 +35,8 @@ export type CategoryCardModel = {
   highlightIdea: string;
   iconKey: string;
 };
+
+type CategoriesViewMode = "grid" | "list";
 
 type CreateCategoryInput = {
   title: string;
@@ -72,6 +75,7 @@ const MODAL_ICON_CHOICES: Array<{ key: string; icon: LucideIcon }> = [
 
 export default function CategoriesPageClient({ initialCategories }: { initialCategories: CategoryCardModel[] }) {
   const [categories, setCategories] = useState(initialCategories);
+  const [viewMode, setViewMode] = useState<CategoriesViewMode>("grid");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
 
@@ -167,13 +171,27 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
               </button>
               <button
                 type="button"
-                className="w-10 h-10 rounded border border-primary/20 bg-surface flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors"
+                onClick={() => setViewMode("grid")}
+                className={
+                  viewMode === "grid"
+                    ? "w-10 h-10 rounded border border-primary/20 bg-surface flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors"
+                    : "w-10 h-10 rounded border border-transparent text-outline hover:text-on-surface transition-colors flex items-center justify-center"
+                }
+                aria-label="Grid view"
+                aria-pressed={viewMode === "grid"}
               >
                 <Grid2x2 className="w-4 h-4" />
               </button>
               <button
                 type="button"
-                className="w-10 h-10 rounded border border-transparent text-outline hover:text-on-surface transition-colors flex items-center justify-center"
+                onClick={() => setViewMode("list")}
+                className={
+                  viewMode === "list"
+                    ? "w-10 h-10 rounded border border-primary/20 bg-surface flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors"
+                    : "w-10 h-10 rounded border border-transparent text-outline hover:text-on-surface transition-colors flex items-center justify-center"
+                }
+                aria-label="List view"
+                aria-pressed={viewMode === "list"}
               >
                 <List className="w-4 h-4" />
               </button>
@@ -215,66 +233,78 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
               })}
             </div>
 
-            <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-6">
-              {desktopCategories.map((category) => {
-                const Icon = CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb;
-                return (
-                  <article
-                    key={category.title}
-                    className="group bg-surface border border-primary/20 rounded-xl p-8 relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] hover:border-primary/55 flex flex-col h-full min-h-[320px]"
-                  >
-                    <div className="absolute -right-12 -top-12 text-primary/5 pointer-events-none">
-                      <Icon className="w-40 h-40" />
-                    </div>
-
-                    <div className="flex justify-between items-start mb-auto relative z-10">
-                      <div>
-                        <h2 className="text-3xl font-light tracking-wide text-primary">
-                          {category.title}
-                        </h2>
-                        <div className="flex flex-wrap items-center gap-3 mt-2">
-                          <span className="text-[12px] text-outline bg-surface-container-low px-3 py-1 rounded-full border border-outline-variant">
-                            {category.count} Ideas Stored
-                          </span>
-                          <span className="text-[12px] text-outline">
-                            Last Entry: {category.lastEntryLabel}
-                          </span>
-                        </div>
+            {viewMode === "grid" ? (
+              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-6">
+                {desktopCategories.map((category) => {
+                  const Icon = CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb;
+                  return (
+                    <article
+                      key={category.title}
+                      className="group bg-surface border border-primary/20 rounded-xl p-8 relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] hover:border-primary/55 flex flex-col h-full min-h-[320px]"
+                    >
+                      <div className="absolute -right-12 -top-12 text-primary/5 pointer-events-none">
+                        <Icon className="w-40 h-40" />
                       </div>
 
-                      <button
-                        type="button"
-                        className="text-outline group-hover:text-primary transition-colors"
-                        title={`Open ${category.title}`}
-                      >
-                        <ArrowRight className="w-5 h-5" />
-                      </button>
-                    </div>
+                      <div className="flex justify-between items-start mb-auto relative z-10">
+                        <div>
+                          <h2 className="text-3xl font-light tracking-wide text-primary">
+                            {category.title}
+                          </h2>
+                          <div className="flex flex-wrap items-center gap-3 mt-2">
+                            <span className="text-[12px] text-outline bg-surface-container-low px-3 py-1 rounded-full border border-outline-variant">
+                              {category.count} Ideas Stored
+                            </span>
+                            <span className="text-[12px] text-outline">
+                              Last Entry: {category.lastEntryLabel}
+                            </span>
+                          </div>
+                        </div>
 
-                    <div className="mt-8 relative z-10">
-                      <h3 className="text-[12px] text-outline uppercase tracking-wider mb-4 border-b border-primary/10 pb-2">
-                        Recent Ideas
-                      </h3>
-                      {category.recentIdeas.length > 0 ? (
-                        <ul className="space-y-3">
-                          {category.recentIdeas.map((ideaTitle) => (
-                            <li
-                              key={ideaTitle}
-                              className="text-[15px] text-on-surface truncate hover:text-primary cursor-pointer transition-colors"
-                              title={ideaTitle}
-                            >
-                              {ideaTitle}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-sm text-outline">No ideas in this category yet.</p>
-                      )}
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
+                        <button
+                          type="button"
+                          className="text-outline group-hover:text-primary transition-colors"
+                          title={`Open ${category.title}`}
+                        >
+                          <ArrowRight className="w-5 h-5" />
+                        </button>
+                      </div>
+
+                      <div className="mt-8 relative z-10">
+                        <h3 className="text-[12px] text-outline uppercase tracking-wider mb-4 border-b border-primary/10 pb-2">
+                          Recent Ideas
+                        </h3>
+                        {category.recentIdeas.length > 0 ? (
+                          <ul className="space-y-3">
+                            {category.recentIdeas.map((ideaTitle) => (
+                              <li
+                                key={ideaTitle}
+                                className="text-[15px] text-on-surface truncate hover:text-primary cursor-pointer transition-colors"
+                                title={ideaTitle}
+                              >
+                                {ideaTitle}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-outline">No ideas in this category yet.</p>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="hidden md:flex md:flex-col gap-3">
+                {desktopCategories.map((category) => (
+                  <CategoryListRow
+                    key={category.title}
+                    category={category}
+                    icon={CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb}
+                  />
+                ))}
+              </div>
+            )}
           </>
         ) : (
           <section className="bg-surface border border-outline-variant/40 rounded-xl p-10 text-center">
