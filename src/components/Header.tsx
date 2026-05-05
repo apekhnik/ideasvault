@@ -7,7 +7,7 @@ import { useState } from "react";
 import IdeaFormModal from "./IdeaFormModal";
 
 const NAV_LINKS = [
-  { href: "/", label: "Vault" },
+  { href: "/vault", label: "Vault" },
   { href: "/categories", label: "Categories" },
   { href: "/archives", label: "Archives" },
   { href: "/settings", label: "Settings" },
