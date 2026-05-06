@@ -24,34 +24,30 @@ export default function IdeaCard({
   showArchiveButton = true,
 }: IdeaCardData & { showArchiveButton?: boolean }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const PriorityIcon = priority === IdeaPriority.High ? ChevronsUp : priority === IdeaPriority.Low ? ChevronsDown : Minus;
-  const priorityColor =
-    priority === IdeaPriority.High
-      ? "text-error border-error/30"
-      : priority === IdeaPriority.Medium
-        ? "text-primary border-primary/30"
-        : "text-on-surface-variant border-outline/30";
+  const isHighPriority = priority === IdeaPriority.High;
 
   return (
     <>
-      <div className="bg-surface rounded-xl p-6 border border-primary/20 hover:border-primary/55 hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] transition-all duration-200 relative group flex flex-col gap-stack-md h-full cursor-pointer">
+      <div 
+        className={cn(
+          "bg-[#161616] border border-[#c9a84c]/20 rounded-xl p-stack-md hover:gold-glow transition-all duration-300 flex flex-col h-full relative group cursor-pointer",
+          isHighPriority && "border-t-2 border-t-[#c9a84c]"
+        )}
+      >
         {/* Top Row */}
-        <div className="flex justify-between items-start">
-          <div className="flex gap-2">
-            <span className="px-2 py-1 rounded-full bg-surface-container border border-outline/30 text-on-surface-variant font-label-meta text-[12px] flex items-center">
-              {category}
-            </span>
-            <span className={cn("px-2 py-1 rounded-full bg-surface-container border font-label-meta text-[12px] flex items-center gap-1", priorityColor)}>
-              <PriorityIcon className="w-3 h-3" />
-              {priority.charAt(0).toUpperCase() + priority.slice(1)}
-            </span>
-          </div>
+        <div className="flex justify-between items-start mb-4">
+          <span className="font-label-meta text-label-meta px-2 py-1 rounded bg-[#111111] border border-[#c9a84c]/10 text-[#c9a84c]">
+            {category}
+          </span>
 
           {/* Actions */}
           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
-              onClick={() => setIsEditModalOpen(true)}
-              className="text-outline hover:text-primary transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsEditModalOpen(true);
+              }}
+              className="text-[#555555] hover:text-[#c9a84c] transition-colors"
               title="Edit idea"
             >
               <Edit className="w-4 h-4" />
@@ -63,25 +59,34 @@ export default function IdeaCard({
 
         {/* Content */}
         <div className="flex-1">
-          <h2 className="font-card-title text-[15px] text-on-surface mb-2 line-clamp-2">
+          <h2 className="font-card-title text-card-title text-on-surface group-hover:text-primary transition-colors mb-2 line-clamp-2">
             {title}
           </h2>
-          <p className="text-outline text-sm line-clamp-3">
+          <p className="font-body text-body text-outline line-clamp-3">
             {notes}
           </p>
         </div>
 
         {/* Bottom Row */}
-        <div className="flex justify-between items-center mt-auto pt-4 border-t border-outline-variant/20">
-          <div className="flex items-center text-primary">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={cn("w-4 h-4", i < rating ? "fill-primary" : "text-outline/50")}
-              />
-            ))}
+        <div className="mt-8 pt-4 border-t border-[#c9a84c]/10 flex justify-between items-center text-label-meta font-label-meta text-[#555555]">
+          <span>Archived {date}</span>
+          <div className="flex items-center gap-2">
+            {isHighPriority ? (
+              <div className="flex items-center gap-1 text-[#c9a84c] font-bold">
+                <Star className="w-4 h-4 fill-[#c9a84c]" />
+                <span>High Priority</span>
+              </div>
+            ) : (
+              <div className="flex items-center text-primary">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={cn("w-3.5 h-3.5", i < rating ? "fill-primary" : "text-[#555555]/50")}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          <span className="font-label-meta text-[12px] text-outline">{date}</span>
         </div>
       </div>
 
