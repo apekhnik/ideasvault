@@ -14,7 +14,7 @@ export const DEFAULT_CATEGORY = "General";
 export interface IdeaFormData {
   id?: number;
   title?: string;
-  category?: IdeaCategory | string;
+  category?: string;
   priority?: IdeaPriority;
   rating?: number;
   notes?: string;
