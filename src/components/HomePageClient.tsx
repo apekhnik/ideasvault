@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Grid2x2, List } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/Header";
@@ -53,7 +53,6 @@ const toolbarVariants = {
 
 export default function HomePageClient({ initialIdeas }: { initialIdeas: IdeaCardData[] }) {
   const [viewMode, setViewMode] = useState<HomeViewMode>("grid");
-  const ideas = useMemo(() => initialIdeas, [initialIdeas]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -100,7 +99,7 @@ export default function HomePageClient({ initialIdeas }: { initialIdeas: IdeaCar
           />
         </motion.div>
 
-        {ideas.length > 0 ? (
+        {initialIdeas.length > 0 ? (
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -108,7 +107,7 @@ export default function HomePageClient({ initialIdeas }: { initialIdeas: IdeaCar
             className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-3"}
           >
             <AnimatePresence mode="popLayout">
-              {ideas.map((idea) => (
+              {initialIdeas.map((idea) => (
                 <motion.div
                   key={idea.id}
                   variants={itemVariants}

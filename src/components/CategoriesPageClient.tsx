@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import { createCategory } from "@/lib/actions/ideas";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import CategoryListRow from "@/components/CategoryListRow";
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useState } from "react";
 import {
   Archive,
   ArrowRight,
@@ -119,8 +119,6 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
     return true;
   }
 
-  const desktopCategories = useMemo(() => categories, [categories]);
-
   return (
     <div className="flex flex-col min-h-screen">
       <div className="hidden md:block">
@@ -234,7 +232,7 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
 
             {viewMode === "grid" ? (
               <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-6">
-                {desktopCategories.map((category) => {
+                {categories.map((category) => {
                   const Icon = CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb;
                   return (
                     <article
@@ -295,7 +293,7 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
               </div>
             ) : (
               <div className="hidden md:flex md:flex-col gap-3">
-                {desktopCategories.map((category) => (
+                {categories.map((category) => (
                   <CategoryListRow
                     key={category.title}
                     category={category}
