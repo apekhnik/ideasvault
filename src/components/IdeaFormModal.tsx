@@ -113,7 +113,7 @@ export default function IdeaFormModal({
               name="title"
               required
               defaultValue={idea?.title ?? ""}
-              className="w-full bg-surface-container-lowest border border-primary/60 rounded-lg px-4 py-3 text-sm text-on-surface placeholder-zinc-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 shadow-[0_0_15px_rgba(201,168,76,0.15)] transition-all caret-primary"
+              className="w-full bg-surface-container-lowest border border-primary/60 rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 shadow-[0_0_15px_rgba(201,168,76,0.15)] transition-all caret-primary"
               placeholder="Enter a concise title..."
               type="text"
             />
@@ -145,7 +145,7 @@ export default function IdeaFormModal({
             <textarea
               name="notes"
               defaultValue={idea?.notes ?? ""}
-              className="w-full bg-surface-container-lowest border border-primary/20 rounded-lg px-4 py-3 text-sm text-on-surface placeholder-zinc-600 focus:outline-none focus:border-primary/50 transition-colors resize-y min-h-[120px]"
+              className="w-full bg-surface-container-lowest border border-primary/20 rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary/50 transition-colors resize-y min-h-[120px]"
               placeholder="Expand upon your thoughts here..."
             />
           </div>
@@ -188,7 +188,7 @@ function PrioritySelector({
             onClick={() => onChange(item)}
             className={cn(
               "flex-1 py-2 px-3 rounded-md text-[12px] transition-all",
-              priority === item ? "bg-surface text-primary shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+              priority === item ? "bg-surface text-primary shadow-sm" : "text-outline hover:text-on-surface"
             )}
           >
             {item.charAt(0).toUpperCase() + item.slice(1)}
@@ -211,7 +211,7 @@ function RatingSelector({ rating, onChange }: { rating: number; onChange: (value
             onClick={() => onChange(step)}
             className="transition-transform hover:scale-110"
           >
-            <Star className={cn("w-5 h-5", step <= rating ? "text-primary fill-primary" : "text-zinc-600")} />
+            <Star className={cn("w-5 h-5", step <= rating ? "text-primary fill-primary" : "text-outline/50")} />
           </button>
         ))}
       </div>
@@ -247,7 +247,7 @@ function FormFooter({
       <button
         type="button"
         onClick={onClose}
-        className="w-full py-3 rounded-lg bg-transparent border border-transparent text-zinc-400 hover:text-on-surface hover:bg-surface-container transition-colors active:scale-[0.98]"
+        className="w-full py-3 rounded-lg bg-transparent border border-transparent text-outline hover:text-on-surface hover:bg-surface-container transition-colors active:scale-[0.98]"
       >
         Discard
       </button>

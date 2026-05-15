@@ -94,8 +94,8 @@ export default function ArchivesPageClient({ initialIdeas }: { initialIdeas: Ide
               className={cn(
                 "flex items-center gap-2 px-6 py-3 rounded-lg font-label-meta text-sm transition-all duration-300 border",
                 viewMode === "grid"
-                  ? "bg-on-secondary-fixed text-surface-bright border-transparent shadow-sm"
-                  : "border-outline-variant text-secondary hover:bg-surface-container-low"
+                  ? "border-outline-variant text-on-surface bg-surface-container-low shadow-sm"
+                  : "bg-transparent text-secondary border-outline-variant/50 hover:bg-surface-container-low hover:text-on-surface"
               )}
               aria-label="Grid view"
               aria-pressed={viewMode === "grid"}
@@ -109,8 +109,8 @@ export default function ArchivesPageClient({ initialIdeas }: { initialIdeas: Ide
               className={cn(
                 "flex items-center gap-2 px-6 py-3 rounded-lg font-label-meta text-sm transition-all duration-300 border",
                 viewMode === "list"
-                  ? "bg-on-secondary-fixed text-surface-bright border-transparent shadow-sm"
-                  : "border-outline-variant text-secondary hover:bg-surface-container-low"
+                  ? "border-outline-variant text-on-surface bg-surface-container-low shadow-sm"
+                  : "bg-transparent text-secondary border-outline-variant/50 hover:bg-surface-container-low hover:text-on-surface"
               )}
               aria-label="List view"
               aria-pressed={viewMode === "list"}

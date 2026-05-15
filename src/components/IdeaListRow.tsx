@@ -7,7 +7,7 @@ export default function IdeaListRow({ title, category, priority, date }: IdeaCar
   const isHighPriority = priority === "high";
 
   return (
-    <article className="grid grid-cols-12 gap-gutter px-6 py-8 items-center hover:bg-surface-bright transition-all duration-300 group cursor-pointer">
+    <article className="grid grid-cols-12 gap-gutter px-6 py-8 items-center hover:bg-surface-container-low transition-all duration-300 group cursor-pointer">
       <div className="col-span-6 md:col-span-7 flex items-center gap-4">
         <div className={cn(
           "w-1.5 h-1.5 rounded-full shrink-0",

@@ -5,6 +5,9 @@ import { createCategory } from "@/lib/actions/ideas";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import CategoryListRow from "@/components/CategoryListRow";
 import { type FormEvent, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import {
   Archive,
   ArrowRight,
@@ -25,6 +28,48 @@ import {
   Fingerprint,
   Sparkles,
 } from "lucide-react";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    filter: "blur(8px)",
+    y: 20,
+  },
+  show: {
+    opacity: 1,
+    filter: "blur(0px)",
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const headerVariants = {
+  hidden: { opacity: 0, filter: "blur(10px)", y: -10 },
+  show: {
+    opacity: 1,
+    filter: "blur(0px)",
+    y: 0,
+    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 export type CategoryCardModel = {
   title: string;
@@ -120,193 +165,217 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col bg-background">
       <div className="hidden md:block">
         <Header />
       </div>
 
       <MobileCategoriesHeader onCreate={() => setIsCreateOpen(true)} />
 
-      <main className="flex-1 max-w-[1200px] w-full mx-auto px-6 md:px-16 pt-24 md:pt-12 pb-28 md:pb-16">
+      <main className="flex-1 max-w-[1200px] w-full mx-auto px-6 md:px-16 py-12 md:py-16 pt-24 md:pt-16 pb-28 md:pb-16">
+
+        {/* Mobile title */}
         <section className="md:hidden mb-6">
-          <header className="mb-6">
-            <h1 className="text-3xl font-light tracking-tight text-on-surface">Categories</h1>
-            <p className="text-sm text-outline mt-1">Your intellectual space</p>
-          </header>
+          <h1 className="text-3xl font-light tracking-tight text-on-surface">Categories</h1>
+          <p className="text-sm text-outline mt-1">Your intellectual space</p>
+        </section>
 
-          <div className="mb-6">
-            <div className="bg-surface-container-lowest border border-outline-variant rounded-xl flex items-center px-4 py-3">
-              <Search className="w-4 h-4 text-outline mr-3" />
-              <input
-                className="bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface text-sm w-full placeholder:text-outline-variant"
-                placeholder="Search archives..."
-                type="text"
-              />
+        {/* Desktop header */}
+        <motion.header
+          initial="hidden"
+          animate="show"
+          variants={headerVariants}
+          className="hidden md:flex mb-16 flex-col md:flex-row md:items-end justify-between gap-8"
+          style={{ willChange: "filter, opacity" }}
+        >
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-12 h-[1px] bg-primary" />
+              <span className="font-label-meta text-xs text-primary uppercase tracking-[0.2em]">Organizational System</span>
             </div>
+            <h1 className="font-page-title text-4xl md:text-5xl text-on-surface mb-4">Categories</h1>
+            <p className="font-body text-lg text-secondary max-w-lg">
+              A structured index of intellectual domains — organize, navigate, and expand your vault with precision.
+            </p>
           </div>
-        </section>
 
-        <section className="hidden md:block">
-          <header className="mb-8 flex justify-between items-end">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-light tracking-tight text-on-surface">
-                Categories
-              </h1>
-              <p className="text-sm text-outline mt-1">
-                Organize and navigate your intellectual space.
-              </p>
-            </div>
-
-            <div className="hidden sm:flex gap-2">
-              <button
-                type="button"
-                onClick={() => setIsCreateOpen(true)}
-                className="px-4 h-10 rounded border border-primary/20 bg-surface text-primary hover:bg-surface-container-high transition-colors flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                New Category
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("grid")}
-                className={
-                  viewMode === "grid"
-                    ? "w-10 h-10 rounded border border-primary/20 bg-surface flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors"
-                    : "w-10 h-10 rounded border border-transparent text-outline hover:text-on-surface transition-colors flex items-center justify-center"
-                }
-                aria-label="Grid view"
-                aria-pressed={viewMode === "grid"}
-              >
-                <Grid2x2 className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("list")}
-                className={
-                  viewMode === "list"
-                    ? "w-10 h-10 rounded border border-primary/20 bg-surface flex items-center justify-center text-primary hover:bg-surface-container-high transition-colors"
-                    : "w-10 h-10 rounded border border-transparent text-outline hover:text-on-surface transition-colors flex items-center justify-center"
-                }
-                aria-label="List view"
-                aria-pressed={viewMode === "list"}
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-          </header>
-        </section>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsCreateOpen(true)}
+              className="flex items-center gap-2 px-6 py-3 rounded-lg font-label-meta text-sm transition-all duration-300 border border-primary/30 text-primary hover:bg-surface-container-low"
+            >
+              <Plus className="w-4 h-4" />
+              New Category
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              className={cn(
+                "flex items-center gap-2 px-6 py-3 rounded-lg font-label-meta text-sm transition-all duration-300 border",
+                viewMode === "grid"
+                  ? "border-outline-variant text-on-surface bg-surface-container-low shadow-sm"
+                  : "bg-transparent text-secondary border-outline-variant/50 hover:bg-surface-container-low hover:text-on-surface"
+              )}
+              aria-label="Grid view"
+              aria-pressed={viewMode === "grid"}
+            >
+              <Grid2x2 className="w-4 h-4" />
+              Grid
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              className={cn(
+                "flex items-center gap-2 px-6 py-3 rounded-lg font-label-meta text-sm transition-all duration-300 border",
+                viewMode === "list"
+                  ? "border-outline-variant text-on-surface bg-surface-container-low shadow-sm"
+                  : "bg-transparent text-secondary border-outline-variant/50 hover:bg-surface-container-low hover:text-on-surface"
+              )}
+              aria-label="List view"
+              aria-pressed={viewMode === "list"}
+            >
+              <List className="w-4 h-4" />
+              List
+            </button>
+          </div>
+        </motion.header>
 
         {hasCategories ? (
           <>
-            <div className="md:hidden space-y-6">
-              {categories.map((category) => {
-                const Icon = CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb;
-                return (
-                  <article
-                    key={category.title}
-                    className="bg-surface-container-low border border-primary-container/20 rounded-xl p-5 flex items-center transition-all duration-200 ease-in-out hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] hover:border-primary/55 group cursor-pointer"
-                  >
-                    <div className="mr-5">
-                      <Icon className="w-10 h-10 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-baseline mb-1 gap-3">
-                        <h2 className="text-[18px] font-light text-on-surface truncate">
-                          {category.title}
-                        </h2>
-                        <span className="text-[12px] text-outline-variant uppercase whitespace-nowrap">
-                          {category.count} Ideas
-                        </span>
-                      </div>
-                      <p className="text-outline text-[13px] line-clamp-1 italic">
-                        {category.highlightIdea}
-                      </p>
-                    </div>
-                    <div className="ml-4">
-                      <ChevronRight className="w-5 h-5 text-outline-variant group-hover:text-primary transition-colors" />
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-
-            {viewMode === "grid" ? (
-              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Mobile cards */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="md:hidden space-y-4"
+            >
+              <AnimatePresence mode="popLayout">
                 {categories.map((category) => {
                   const Icon = CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb;
                   return (
-                    <article
+                    <motion.article
                       key={category.title}
-                      className="group bg-surface border border-primary/20 rounded-xl p-8 relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] hover:border-primary/55 flex flex-col h-full min-h-[320px]"
+                      variants={itemVariants}
+                      layout
+                      exit={{ opacity: 0, filter: "blur(8px)", scale: 0.95 }}
+                      style={{ willChange: "filter, opacity, transform" }}
+                      className="bg-surface-container-low border border-primary-container/20 rounded-xl p-5 flex items-center transition-all duration-200 hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] hover:border-primary/55 group cursor-pointer"
                     >
-                      <div className="absolute -right-12 -top-12 text-primary/5 pointer-events-none">
-                        <Icon className="w-40 h-40" />
+                      <div className="mr-5">
+                        <Icon className="w-10 h-10 text-primary" />
                       </div>
-
-                      <div className="flex justify-between items-start mb-auto relative z-10">
-                        <div>
-                          <h2 className="text-3xl font-light tracking-wide text-primary">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-baseline mb-1 gap-3">
+                          <h2 className="text-[18px] font-light text-on-surface truncate">
                             {category.title}
                           </h2>
-                          <div className="flex flex-wrap items-center gap-3 mt-2">
-                            <span className="text-[12px] text-outline bg-surface-container-low px-3 py-1 rounded-full border border-outline-variant">
-                              {category.count} Ideas Stored
-                            </span>
-                            <span className="text-[12px] text-outline">
-                              Last Entry: {category.lastEntryLabel}
-                            </span>
-                          </div>
+                          <span className="text-[12px] text-outline-variant uppercase whitespace-nowrap">
+                            {category.count} Ideas
+                          </span>
                         </div>
-
-                        <button
-                          type="button"
-                          className="text-outline group-hover:text-primary transition-colors"
-                          title={`Open ${category.title}`}
-                        >
-                          <ArrowRight className="w-5 h-5" />
-                        </button>
+                        <p className="text-outline text-[13px] line-clamp-1 italic">
+                          {category.highlightIdea}
+                        </p>
                       </div>
-
-                      <div className="mt-8 relative z-10">
-                        <h3 className="text-[12px] text-outline uppercase tracking-wider mb-4 border-b border-primary/10 pb-2">
-                          Recent Ideas
-                        </h3>
-                        {category.recentIdeas.length > 0 ? (
-                          <ul className="space-y-3">
-                            {category.recentIdeas.map((ideaTitle) => (
-                              <li
-                                key={ideaTitle}
-                                className="text-[15px] text-on-surface truncate hover:text-primary cursor-pointer transition-colors"
-                                title={ideaTitle}
-                              >
-                                {ideaTitle}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-sm text-outline">No ideas in this category yet.</p>
-                        )}
+                      <div className="ml-4">
+                        <ChevronRight className="w-5 h-5 text-outline-variant group-hover:text-primary transition-colors" />
                       </div>
-                    </article>
+                    </motion.article>
                   );
                 })}
-              </div>
-            ) : (
-              <div className="hidden md:flex md:flex-col gap-3">
-                {categories.map((category) => (
-                  <CategoryListRow
-                    key={category.title}
-                    category={category}
-                    icon={CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb}
-                  />
-                ))}
-              </div>
-            )}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Desktop grid/list — single container, items stay mounted */}
+            <div className={cn(
+              "hidden md:block",
+              viewMode === "list" && "bg-surface-container-lowest border border-outline-variant/30 rounded-xl premium-shadow overflow-hidden"
+            )}>
+              {viewMode === "list" && (
+                <div className="grid grid-cols-12 gap-gutter px-6 py-4 bg-surface-container-low border-b border-outline-variant/30">
+                  <div className="col-span-6 md:col-span-7">
+                    <span className="font-label-meta text-[10px] md:text-xs text-outline uppercase tracking-wider">Category Name</span>
+                  </div>
+                  <div className="col-span-3 md:col-span-3">
+                    <span className="font-label-meta text-[10px] md:text-xs text-outline uppercase tracking-wider">Ideas</span>
+                  </div>
+                  <div className="col-span-3 md:col-span-2 text-right">
+                    <span className="font-label-meta text-[10px] md:text-xs text-outline uppercase tracking-wider">Last Entry</span>
+                  </div>
+                </div>
+              )}
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                className={cn(
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 md:grid-cols-2 gap-gutter"
+                    : "divide-y divide-outline-variant/20"
+                )}
+              >
+                <AnimatePresence mode="popLayout">
+                  {categories.map((category) => {
+                    const Icon = CATEGORY_ICON_MAP[category.iconKey] ?? Lightbulb;
+                    return (
+                      <motion.div
+                        key={category.title}
+                        variants={itemVariants}
+                        layout
+                        initial="hidden"
+                        animate="show"
+                        exit={{ opacity: 0, filter: "blur(8px)", scale: 0.95 }}
+                        style={{ willChange: "filter, opacity, transform" }}
+                      >
+                        {viewMode === "grid" ? (
+                          <article className="bg-surface-container-lowest micro-border rounded-lg p-6 premium-shadow group hover:-translate-y-1 transition-all duration-300 flex flex-col h-full cursor-pointer">
+                            <div className="flex justify-between items-start mb-4">
+                              <span className="px-2 py-1 bg-surface-container-high text-on-secondary-container rounded-sm font-label-meta text-xs flex items-center gap-1.5">
+                                <Icon className="w-3 h-3" />
+                                {category.title}
+                              </span>
+                              <span className="font-label-meta text-xs text-outline">
+                                {category.count} ideas
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <h2 className="font-card-title text-xl text-on-surface group-hover:text-primary transition-colors mb-2 line-clamp-2">
+                                {category.highlightIdea || "No ideas in this category yet."}
+                              </h2>
+                              {category.recentIdeas.length > 0 && (
+                                <p className="font-body text-body text-secondary line-clamp-3">
+                                  {category.recentIdeas.join(" · ")}
+                                </p>
+                              )}
+                            </div>
+                            <div className="mt-8 pt-4 border-t border-outline-variant/30 flex justify-between items-center text-xs font-label-meta text-outline">
+                              <span>Last entry: {category.lastEntryLabel}</span>
+                              <ArrowRight className="w-4 h-4 group-hover:text-primary transition-colors" />
+                            </div>
+                          </article>
+                        ) : (
+                          <CategoryListRow
+                            category={category}
+                            icon={Icon}
+                          />
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </motion.div>
+            </div>
           </>
         ) : (
-          <section className="bg-surface border border-outline-variant/40 rounded-xl p-10 text-center">
+          <motion.section
+            initial={{ opacity: 0, filter: "blur(10px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1 }}
+            className="bg-surface-container-low micro-border rounded-xl p-10 text-center"
+          >
             <h2 className="text-2xl font-light text-on-surface mb-2">No Categories Yet</h2>
-            <p className="text-outline">
+            <p className="text-secondary">
               Create your first category to start organizing your vault.
             </p>
             <button
@@ -316,7 +385,7 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
             >
               Create Category
             </button>
-          </section>
+          </motion.section>
         )}
       </main>
 

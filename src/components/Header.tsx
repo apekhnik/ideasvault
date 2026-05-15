@@ -22,7 +22,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-surface/80 backdrop-blur-xl border-b border-primary/20 shadow-[0_4px_30px_rgba(0,0,0,0.5)] top-0 z-50 sticky tracking-tight font-light">
+      <header className="bg-surface/80 backdrop-blur-xl border-b border-primary/20 premium-shadow top-0 z-50 sticky tracking-tight font-light">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between px-6 md:px-16 h-20">
           <BrandLogo />
           <PrimaryNavigation pathname={pathname} />
