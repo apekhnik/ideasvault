@@ -1,17 +1,18 @@
 "use client";
 
-import { type LucideIcon } from "lucide-react";
+import { Trash2, type LucideIcon } from "lucide-react";
 import { type CategoryCardModel } from "@/components/CategoriesPageClient";
 
 type CategoryListRowProps = {
   category: CategoryCardModel;
   icon: LucideIcon;
+  onDelete?: () => void;
 };
 
-export default function CategoryListRow({ category, icon: Icon }: CategoryListRowProps) {
+export default function CategoryListRow({ category, icon: Icon, onDelete }: CategoryListRowProps) {
   return (
     <article className="grid grid-cols-12 gap-gutter px-6 py-8 items-center hover:bg-surface-bright transition-all duration-300 group cursor-pointer">
-      <div className="col-span-6 md:col-span-7 flex items-center gap-4">
+      <div className="col-span-6 md:col-span-6 flex items-center gap-4">
         <Icon className="w-4 h-4 text-primary shrink-0" />
         <h2 className="font-headline-md text-lg md:text-xl text-on-surface group-hover:text-primary transition-colors truncate">
           {category.title}
@@ -24,10 +25,23 @@ export default function CategoryListRow({ category, icon: Icon }: CategoryListRo
         </span>
       </div>
 
-      <div className="col-span-3 md:col-span-2 text-right">
+      <div className="col-span-2 md:col-span-2 text-right">
         <span className="font-body-md text-xs md:text-sm text-outline font-medium uppercase">
           {category.lastEntryLabel}
         </span>
+      </div>
+
+      <div className="col-span-1 md:col-span-1 flex justify-end">
+        {onDelete && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="opacity-0 group-hover:opacity-100 text-outline hover:text-error transition-all duration-200 p-1"
+            title="Delete category"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
       </div>
     </article>
   );

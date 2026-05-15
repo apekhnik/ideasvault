@@ -159,6 +159,7 @@ export async function getUserCategories() {
 
     return await db
       .select({
+        id: categories.id,
         title: categories.title,
         description: categories.description,
         iconKey: categories.iconKey,
@@ -168,6 +169,23 @@ export async function getUserCategories() {
   } catch (error) {
     console.error("🔥 User Categories Read Error:", error);
     return [];
+  }
+}
+
+export async function deleteCategory(title: string) {
+  try {
+    const { userId } = await auth();
+    if (!userId) return { success: false, error: "Unauthorized" };
+
+    await db
+      .delete(categories)
+      .where(and(eq(categories.userId, userId), eq(categories.title, title)));
+
+    revalidatePath("/categories");
+    return { success: true };
+  } catch (error) {
+    console.error("🔥 Delete Category Error:", error);
+    return { success: false };
   }
 }
 

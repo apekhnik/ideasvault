@@ -32,7 +32,7 @@ export default async function CategoriesPage() {
 
 function buildCategoryCards(
   ideas: Idea[],
-  userCategories: Array<{ title: string; description: string | null; iconKey: string | null }>
+  userCategories: Array<{ id: number; title: string; description: string | null; iconKey: string | null }>
 ): CategoryCardModel[] {
   const grouped = new Map<string, Idea[]>();
 
@@ -57,7 +57,7 @@ function buildCategoryCards(
     userCategories.map((category) => [
       normalizeCategory(category.title).toLowerCase(),
       category,
-    ])
+    ] as const)
   );
 
   return [...grouped.entries()]
@@ -72,6 +72,7 @@ function buildCategoryCards(
       const persistedCategory = userCategoryMap.get(title.toLowerCase());
       const newestDate = categoryIdeas[0]?.createdAt ?? null;
       return {
+        id: persistedCategory?.id ?? null,
         title,
         count: categoryIdeas.length,
         lastEntryLabel: formatRelativeTime(newestDate),

@@ -1,7 +1,8 @@
 "use client";
 
 import Header from "@/components/Header";
-import { createCategory } from "@/lib/actions/ideas";
+import { createCategory, deleteCategory } from "@/lib/actions/ideas";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import CategoryListRow from "@/components/CategoryListRow";
 import { type FormEvent, useState } from "react";
@@ -18,7 +19,7 @@ import {
   Lightbulb,
   List,
   Plus,
-  Search,
+  Trash2,
   UserRound,
   X,
   type LucideIcon,
@@ -72,6 +73,7 @@ const headerVariants = {
 };
 
 export type CategoryCardModel = {
+  id?: number | null;
   title: string;
   count: number;
   lastEntryLabel: string;
@@ -122,8 +124,21 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
   const [viewMode, setViewMode] = useState<CategoriesViewMode>("grid");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [pendingDeleteTitle, setPendingDeleteTitle] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const hasCategories = categories.length > 0;
+
+  async function handleDeleteCategory() {
+    if (!pendingDeleteTitle) return;
+    setIsDeleting(true);
+    const result = await deleteCategory(pendingDeleteTitle);
+    if (result.success) {
+      setCategories((prev) => prev.filter((c) => c.title !== pendingDeleteTitle));
+    }
+    setIsDeleting(false);
+    setPendingDeleteTitle(null);
+  }
 
   async function handleCreateCategory(input: CreateCategoryInput): Promise<boolean> {
     setCreateError(null);
@@ -278,7 +293,17 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
                           {category.highlightIdea}
                         </p>
                       </div>
-                      <div className="ml-4">
+                      <div className="ml-4 flex items-center gap-2">
+                        {category.id != null && (
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); setPendingDeleteTitle(category.title); }}
+                            className="text-outline hover:text-error transition-colors p-1"
+                            title="Delete category"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
                         <ChevronRight className="w-5 h-5 text-outline-variant group-hover:text-primary transition-colors" />
                       </div>
                     </motion.article>
@@ -294,15 +319,16 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
             )}>
               {viewMode === "list" && (
                 <div className="grid grid-cols-12 gap-gutter px-6 py-4 bg-surface-container-low border-b border-outline-variant/30">
-                  <div className="col-span-6 md:col-span-7">
+                  <div className="col-span-6 md:col-span-6">
                     <span className="font-label-meta text-[10px] md:text-xs text-outline uppercase tracking-wider">Category Name</span>
                   </div>
                   <div className="col-span-3 md:col-span-3">
                     <span className="font-label-meta text-[10px] md:text-xs text-outline uppercase tracking-wider">Ideas</span>
                   </div>
-                  <div className="col-span-3 md:col-span-2 text-right">
+                  <div className="col-span-2 md:col-span-2 text-right">
                     <span className="font-label-meta text-[10px] md:text-xs text-outline uppercase tracking-wider">Last Entry</span>
                   </div>
+                  <div className="col-span-1 md:col-span-1" />
                 </div>
               )}
               <motion.div
@@ -335,9 +361,21 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
                                 <Icon className="w-3 h-3" />
                                 {category.title}
                               </span>
-                              <span className="font-label-meta text-xs text-outline">
-                                {category.count} ideas
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="font-label-meta text-xs text-outline">
+                                  {category.count} ideas
+                                </span>
+                                {category.id != null && (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => { e.stopPropagation(); setPendingDeleteTitle(category.title); }}
+                                    className="opacity-0 group-hover:opacity-100 text-outline hover:text-error transition-all duration-200"
+                                    title="Delete category"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </div>
                             </div>
                             <div className="flex-1">
                               <h2 className="font-card-title text-xl text-on-surface group-hover:text-primary transition-colors mb-2 line-clamp-2">
@@ -358,6 +396,7 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
                           <CategoryListRow
                             category={category}
                             icon={Icon}
+                            onDelete={category.id != null ? () => setPendingDeleteTitle(category.title) : undefined}
                           />
                         )}
                       </motion.div>
@@ -400,6 +439,15 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
           setCreateError(null);
         }}
         onCreate={handleCreateCategory}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={pendingDeleteTitle !== null}
+        isDeleting={isDeleting}
+        onClose={() => setPendingDeleteTitle(null)}
+        onConfirm={handleDeleteCategory}
+        title="Delete Category?"
+        description="This will permanently remove the category from your vault. Ideas in this category will not be deleted."
       />
     </div>
   );
