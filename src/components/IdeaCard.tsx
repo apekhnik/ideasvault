@@ -30,13 +30,13 @@ export default function IdeaCard({
     <>
       <div 
         className={cn(
-          "bg-[#161616] border border-[#c9a84c]/20 rounded-xl p-stack-md hover:gold-glow transition-all duration-300 flex flex-col h-full relative group cursor-pointer",
-          isHighPriority && "border-t-2 border-t-[#c9a84c]"
+          "bg-surface-container-lowest micro-border rounded-lg p-6 premium-shadow group hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative cursor-pointer",
+          isHighPriority && "border-t-2 border-t-primary-container"
         )}
       >
         {/* Top Row */}
         <div className="flex justify-between items-start mb-4">
-          <span className="font-label-meta text-label-meta px-2 py-1 rounded bg-[#111111] border border-[#c9a84c]/10 text-[#c9a84c]">
+          <span className="px-2 py-1 bg-surface-container-high text-on-secondary-container rounded-sm font-label-meta text-xs">
             {category}
           </span>
 
@@ -47,7 +47,7 @@ export default function IdeaCard({
                 e.stopPropagation();
                 setIsEditModalOpen(true);
               }}
-              className="text-[#555555] hover:text-[#c9a84c] transition-colors"
+              className="text-outline hover:text-primary transition-colors"
               title="Edit idea"
             >
               <Edit className="w-4 h-4" />
@@ -59,21 +59,21 @@ export default function IdeaCard({
 
         {/* Content */}
         <div className="flex-1">
-          <h2 className="font-card-title text-card-title text-on-surface group-hover:text-primary transition-colors mb-2 line-clamp-2">
+          <h2 className="font-card-title text-xl text-on-surface group-hover:text-primary transition-colors mb-2 line-clamp-2">
             {title}
           </h2>
-          <p className="font-body text-body text-outline line-clamp-3">
+          <p className="font-body text-body text-secondary line-clamp-3">
             {notes}
           </p>
         </div>
 
         {/* Bottom Row */}
-        <div className="mt-8 pt-4 border-t border-[#c9a84c]/10 flex justify-between items-center text-label-meta font-label-meta text-[#555555]">
+        <div className="mt-8 pt-4 border-t border-outline-variant/30 flex justify-between items-center text-xs font-label-meta text-outline">
           <span>Archived {date}</span>
           <div className="flex items-center gap-2">
             {isHighPriority ? (
-              <div className="flex items-center gap-1 text-[#c9a84c] font-bold">
-                <Star className="w-4 h-4 fill-[#c9a84c]" />
+              <div className="flex items-center gap-1 text-primary font-bold">
+                <Star className="w-4 h-4 fill-primary" />
                 <span>High Priority</span>
               </div>
             ) : (
@@ -81,7 +81,7 @@ export default function IdeaCard({
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={cn("w-3.5 h-3.5", i < rating ? "fill-primary" : "text-[#555555]/50")}
+                    className={cn("w-3.5 h-3.5", i < rating ? "fill-primary" : "text-outline/50")}
                   />
                 ))}
               </div>

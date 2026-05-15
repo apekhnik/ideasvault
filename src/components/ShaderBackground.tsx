@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTheme } from "./ThemeProvider";
 
 const vertexShaderSource = `
   attribute vec2 position;
@@ -61,8 +62,10 @@ const fragmentShaderSource = `
 
 export default function ShaderBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
+    if (theme === "light") return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -148,7 +151,9 @@ export default function ShaderBackground() {
       glCtx.deleteShader(fs);
       glCtx.deleteBuffer(buffer);
     };
-  }, []);
+  }, [theme]);
+
+  if (theme === "light") return null;
 
   return (
     <canvas

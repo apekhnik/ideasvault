@@ -1,10 +1,11 @@
 "use client";
 import { UserButton, useAuth, SignInButton, SignOutButton } from "@clerk/nextjs";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import IdeaFormModal from "./IdeaFormModal";
+import { useTheme } from "./ThemeProvider";
 
 const NAV_LINKS = [
   { href: "/vault", label: "Vault" },
@@ -17,10 +18,11 @@ export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isSignedIn, isLoaded } = useAuth();
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
-      <header className="bg-zinc-950/80 backdrop-blur-xl border-b border-primary/20 shadow-[0_4px_30px_rgba(0,0,0,0.5)] top-0 z-50 sticky tracking-tight font-light">
+      <header className="bg-surface/80 backdrop-blur-xl border-b border-primary/20 shadow-[0_4px_30px_rgba(0,0,0,0.5)] top-0 z-50 sticky tracking-tight font-light">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between px-6 md:px-16 h-20">
           <BrandLogo />
           <PrimaryNavigation pathname={pathname} />
@@ -28,6 +30,14 @@ export default function Header() {
           <div className="flex items-center gap-4 md:gap-6">
             <SearchField />
             
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full hover:bg-surface-container transition-colors text-primary"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+
             {isLoaded && isSignedIn && (
               <SignedInActions onCreateIdea={() => setIsModalOpen(true)} />
             )}
