@@ -25,18 +25,23 @@ export async function createIdea(formData: FormData) {
       return { success: false, error: "Title is required" };
     }
 
-    // ИСПОЛЬЗУЕМ ЧИСТЫЙ SQL
-    // Это гарантирует, что драйвер не добавит ничего лишнего
-    await db.execute(sql`
-      INSERT INTO ideas (user_id, title, category, priority, rating, notes, tags)
-      VALUES (${userId}, ${title}, ${category}, ${priority}, ${rating}, ${notes}, ${tags})
-    `);
+    await db.insert(ideas).values({
+      userId,
+      title,
+      category,
+      priority,
+      rating,
+      notes,
+      tags,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
 
     revalidatePath("/");
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database error";
-    console.error("🔥 Raw SQL Error:", message);
+    console.error("🔥 Create Error:", message);
     return { success: false, error: message };
   }
 }
