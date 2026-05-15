@@ -1,7 +1,7 @@
 "use server";
 import { db } from "@/lib/db";
 import { categories, ideas } from "@/lib/db/schema/ideas";
-import { IdeaCategory, IdeaPriority } from "@/lib/types/idea";
+import { DEFAULT_CATEGORY, IdeaPriority } from "@/lib/types/idea";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { sql, eq, and } from "drizzle-orm";
@@ -15,7 +15,7 @@ export async function createIdea(formData: FormData) {
     }
 
     const title = formData.get("title")?.toString().trim() || "";
-    const category = formData.get("category")?.toString() || IdeaCategory.General;
+    const category = formData.get("category")?.toString() || DEFAULT_CATEGORY;
     const priority = formData.get("priority")?.toString() || IdeaPriority.Medium;
     const rating = parseInt(formData.get("rating")?.toString() || "0");
     const notes = formData.get("notes")?.toString() || "";
@@ -76,7 +76,7 @@ export async function updateIdea(id: number, formData: FormData) {
     }
 
     const title = formData.get("title")?.toString().trim() || "";
-    const category = formData.get("category")?.toString() || IdeaCategory.General;
+    const category = formData.get("category")?.toString() || DEFAULT_CATEGORY;
     const priority = formData.get("priority")?.toString() || IdeaPriority.Medium;
     const rating = parseInt(formData.get("rating")?.toString() || "0");
     const notes = formData.get("notes")?.toString() || "";
@@ -113,7 +113,7 @@ export async function updateIdea(id: number, formData: FormData) {
 export async function getIdeaCategories() {
   try {
     const { userId } = await auth();
-    if (!userId) return [IdeaCategory.General];
+    if (!userId) return [DEFAULT_CATEGORY];
 
     const ideaCategoryRows = await db.execute(sql`
       SELECT DISTINCT category
@@ -141,14 +141,14 @@ export async function getIdeaCategories() {
       .filter(Boolean);
 
     const withDefault = [
-      IdeaCategory.General,
+      DEFAULT_CATEGORY,
       ...categoryTableTitles,
       ...ideaCategories,
     ];
     return [...new Set(withDefault)];
   } catch (error) {
     console.error("🔥 Categories Read Error:", error);
-    return [IdeaCategory.General];
+    return [DEFAULT_CATEGORY];
   }
 }
 

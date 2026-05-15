@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { X, Star, Lock } from "lucide-react";
 import { createIdea, getIdeaCategories, updateIdea } from "@/lib/actions/ideas";
 import {
-  IdeaCategory,
+  DEFAULT_CATEGORY,
   IdeaFormMode,
   IdeaPriority,
   type IdeaFormData,
@@ -18,7 +18,7 @@ interface IdeaFormModalProps {
 }
 
 const IDEA_CATEGORIES = [
-  IdeaCategory.General,
+  DEFAULT_CATEGORY,
 ] as const;
 const IDEA_PRIORITIES = [IdeaPriority.Low, IdeaPriority.Medium, IdeaPriority.High] as const;
 const RATING_STEPS = [1, 2, 3, 4, 5] as const;
@@ -30,10 +30,10 @@ export default function IdeaFormModal({
   idea,
 }: IdeaFormModalProps) {
   const [categoryOptions, setCategoryOptions] = useState<string[]>([
-    IdeaCategory.General,
+    DEFAULT_CATEGORY,
   ]);
   const [selectedCategory, setSelectedCategory] = useState(
-    idea?.category ?? IdeaCategory.General
+    idea?.category ?? DEFAULT_CATEGORY
   );
   const [rating, setRating] = useState(idea?.rating ?? 3);
   const [priority, setPriority] = useState<NonNullable<IdeaFormData["priority"]>>(
@@ -62,7 +62,7 @@ export default function IdeaFormModal({
       if (isCancelled) return;
 
       setCategoryOptions(options);
-      const nextCategory = idea?.category ?? options[0] ?? IdeaCategory.General;
+      const nextCategory = idea?.category ?? options[0] ?? DEFAULT_CATEGORY;
       setSelectedCategory(nextCategory);
     }
 
@@ -79,7 +79,7 @@ export default function IdeaFormModal({
     setError(null);
 
     formData.set("rating", rating.toString());
-    formData.set("category", selectedCategory || IdeaCategory.General);
+    formData.set("category", selectedCategory || DEFAULT_CATEGORY);
     formData.set("priority", priority ?? IdeaPriority.Medium);
 
     const result =

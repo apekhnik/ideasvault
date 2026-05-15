@@ -9,14 +9,7 @@ export enum IdeaFormMode {
   Edit = "edit",
 }
 
-export enum IdeaCategory {
-  Design = "Design",
-  Architecture = "Architecture",
-  Research = "Research",
-  Personal = "Personal",
-  Business = "Business",
-  General = "General",
-}
+export const DEFAULT_CATEGORY = "General";
 
 export interface IdeaFormData {
   id?: number;
