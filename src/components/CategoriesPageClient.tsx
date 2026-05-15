@@ -135,7 +135,7 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
           </header>
 
           <div className="mb-6">
-            <div className="bg-[#111111] border border-outline-variant rounded-xl flex items-center px-4 py-3">
+            <div className="bg-surface-container-lowest border border-outline-variant rounded-xl flex items-center px-4 py-3">
               <Search className="w-4 h-4 text-outline mr-3" />
               <input
                 className="bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface text-sm w-full placeholder:text-outline-variant"
@@ -204,7 +204,7 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
                 return (
                   <article
                     key={category.title}
-                    className="bg-[#161616] border border-primary-container/20 rounded-xl p-5 flex items-center transition-all duration-200 ease-in-out hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] hover:border-primary/55 group cursor-pointer"
+                    className="bg-surface-container-low border border-primary-container/20 rounded-xl p-5 flex items-center transition-all duration-200 ease-in-out hover:shadow-[0_0_20px_rgba(201,168,76,0.15)] hover:border-primary/55 group cursor-pointer"
                   >
                     <div className="mr-5">
                       <Icon className="w-10 h-10 text-primary" />
@@ -338,13 +338,13 @@ export default function CategoriesPageClient({ initialCategories }: { initialCat
 
 function MobileCategoriesHeader({ onCreate }: { onCreate: () => void }) {
   return (
-    <header className="md:hidden fixed top-0 w-full z-40 bg-zinc-950 border-b border-amber-500/20">
+    <header className="md:hidden fixed top-0 w-full z-40 bg-surface border-b border-primary/20">
       <div className="flex justify-between items-center w-full px-6 py-4">
-        <span className="text-xl font-bold tracking-widest text-amber-500 uppercase">IdeaVault</span>
+        <span className="text-xl font-bold tracking-widest text-primary uppercase">IdeaVault</span>
         <div className="flex items-center gap-4">
           <button
             onClick={onCreate}
-            className="text-zinc-500 hover:text-amber-200 transition-colors duration-200 active:opacity-80 active:scale-95"
+            className="text-outline hover:text-primary transition-colors duration-200 active:opacity-80 active:scale-95"
           >
             <Plus className="w-5 h-5" />
           </button>
@@ -359,9 +359,9 @@ function MobileCategoriesFab({ onCreate }: { onCreate: () => void }) {
   return (
     <button
       onClick={onCreate}
-      className="md:hidden fixed bottom-24 right-6 w-14 h-14 bg-linear-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center shadow-2xl z-50 active:scale-90 transition-transform"
+      className="md:hidden fixed bottom-24 right-6 w-14 h-14 gold-gradient rounded-full flex items-center justify-center shadow-2xl z-50 active:scale-90 transition-transform"
     >
-      <Plus className="w-7 h-7 text-zinc-950" />
+      <Plus className="w-7 h-7 text-surface" />
     </button>
   );
 }
@@ -396,7 +396,7 @@ function CreateCategoryModal({
 
   return (
     <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-end md:items-center justify-center p-0 md:p-4">
-      <div className="hidden md:block w-full max-w-md bg-[#111111] rounded-xl border border-primary/20 shadow-2xl relative overflow-hidden">
+      <div className="hidden md:block w-full max-w-md bg-surface-container-lowest rounded-xl border border-primary/20 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
         <div className="p-8">
           <div className="mb-8">
@@ -421,7 +421,7 @@ function CreateCategoryModal({
         </div>
       </div>
 
-      <div className="md:hidden w-full max-w-[500px] bg-[#161616] border border-primary/20 rounded-t-4xl shadow-[0_-8px_40px_rgba(0,0,0,0.5)] flex flex-col max-h-[88vh] overflow-hidden">
+      <div className="md:hidden w-full max-w-[500px] bg-surface-container-low border border-primary/20 rounded-t-4xl shadow-[0_-8px_40px_rgba(0,0,0,0.5)] flex flex-col max-h-[88vh] overflow-hidden">
         <div className="w-12 h-1 bg-primary/20 rounded-full mx-auto mt-4 mb-2" />
         <div className="px-8 pt-6 pb-4 flex justify-between items-center">
           <h2 className="text-3xl font-light text-on-surface">Create New Category</h2>
@@ -486,7 +486,7 @@ function CreateCategoryForm({
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-[#111111] border border-primary/20 text-on-surface placeholder:text-zinc-700 focus:border-primary/60 focus:outline-none"
+          className="w-full px-4 py-3 rounded-lg bg-surface-container-lowest border border-primary/20 text-on-surface placeholder:text-outline focus:border-primary/60 focus:outline-none"
           placeholder="e.g., Strategic Planning"
           type="text"
           required
@@ -498,7 +498,7 @@ function CreateCategoryForm({
         <textarea
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-[#111111] border border-primary/20 text-on-surface placeholder:text-zinc-700 resize-none focus:border-primary/60 focus:outline-none"
+          className="w-full px-4 py-3 rounded-lg bg-surface-container-lowest border border-primary/20 text-on-surface placeholder:text-outline resize-none focus:border-primary/60 focus:outline-none"
           placeholder="Briefly describe the purpose of this vault..."
           rows={3}
         />
@@ -518,7 +518,7 @@ function CreateCategoryForm({
                 className={
                   isActive
                     ? "w-10 h-10 flex items-center justify-center rounded-lg border border-primary/40 bg-primary/10 text-primary"
-                    : "w-10 h-10 flex items-center justify-center rounded-lg border border-white/5 hover:border-primary/20 hover:bg-white/5 text-zinc-500 transition-all"
+                    : "w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant/20 hover:border-primary/20 hover:bg-surface-container text-outline transition-all"
                 }
               >
                 <Icon className="w-4 h-4" />
@@ -531,14 +531,14 @@ function CreateCategoryForm({
       <div className="pt-4 flex flex-col gap-3">
         <button
           type="submit"
-          className="w-full py-4 rounded-lg bg-linear-to-br from-[#e6c364] to-primary-container hover:brightness-110 text-zinc-950 font-semibold uppercase tracking-widest text-[13px] transition-all"
+          className="w-full py-4 rounded-lg gold-gradient hover:brightness-110 text-surface font-semibold uppercase tracking-widest text-[13px] transition-all"
         >
           {submitLabel}
         </button>
         <button
           type="button"
           onClick={onClose}
-          className="w-full py-2 text-zinc-500 uppercase tracking-widest text-[11px] hover:text-zinc-300 transition-colors"
+          className="w-full py-2 text-outline uppercase tracking-widest text-[11px] hover:text-on-surface transition-colors"
         >
           {cancelLabel}
         </button>
