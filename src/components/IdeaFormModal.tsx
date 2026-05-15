@@ -8,12 +8,7 @@ import {
   IdeaPriority,
   type IdeaFormData,
 } from "@/lib/types/idea";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from "@/lib/utils";
 
 interface IdeaFormModalProps {
   isOpen: boolean;
@@ -52,6 +47,10 @@ export default function IdeaFormModal({
     let isCancelled = false;
 
     async function loadCategories() {
+      setRating(idea?.rating ?? 3);
+      setPriority(idea?.priority ?? IdeaPriority.Medium);
+      setError(null);
+
       const categoriesFromDb = await getIdeaCategories();
       const options = [
         ...new Set([
@@ -68,9 +67,6 @@ export default function IdeaFormModal({
     }
 
     void loadCategories();
-    setRating(idea?.rating ?? 3);
-    setPriority(idea?.priority ?? IdeaPriority.Medium);
-    setError(null);
     return () => {
       isCancelled = true;
     };

@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import { createCategory } from "@/lib/actions/ideas";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import CategoryListRow from "@/components/CategoryListRow";
-import Link from "next/link";
 import { type FormEvent, useMemo, useState } from "react";
 import {
   Archive,

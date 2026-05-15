@@ -1,17 +1,12 @@
 "use client";
 
-import { Star, Edit, ChevronsUp, ChevronsDown, Minus } from "lucide-react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { Star, Edit } from "lucide-react";
 import { useState } from "react";
 import { IdeaFormMode, IdeaPriority, type IdeaCardData } from "@/lib/types/idea";
 import ArchiveIdeaButton from "./ArchiveIdeaButton";
 import DeleteIdeaButton from "./DeleteIdeaButton";
 import IdeaFormModal from "./IdeaFormModal";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from "@/lib/utils";
 
 export default function IdeaCard({
   id,

@@ -1,13 +1,7 @@
 "use client";
 
-import { Star } from "lucide-react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { type IdeaCardData } from "@/lib/types/idea";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from "@/lib/utils";
 
 export default function IdeaListRow({ title, category, priority, date }: IdeaCardData) {
   const isHighPriority = priority === "high";
