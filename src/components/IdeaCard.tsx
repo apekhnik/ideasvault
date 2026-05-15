@@ -64,7 +64,7 @@ export default function IdeaCard({
 
         {/* Bottom Row */}
         <div className="mt-8 pt-4 border-t border-outline-variant/30 flex justify-between items-center text-xs font-label-meta text-outline">
-          <span>Archived {date}</span>
+          <span>{showArchiveButton ? "Added" : "Archived"} {date}</span>
           <div className="flex items-center gap-2">
             {isHighPriority ? (
               <div className="flex items-center gap-1 text-primary font-bold">
